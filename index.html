@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimba Interaktif: Si Bayangan Malam (Macan Kumbang)</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --primary-jungle: #022c22;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --text-dark: #f8fafc;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --sky-gradient: linear-gradient(to bottom, #090d16, #1e1b4b, #312e81);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .main-header {
+            background-color: #022c22;
+            color: #ffffff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #065f46;
+        }
+
+        .main-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .main-header .logo .icon {
+            font-size: 2.2rem;
+        }
+
+        .main-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .main-header p {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .identity {
+            text-align: right;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.08);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-section h2 {
+            color: #f97316;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-family: Georgia, serif;
+        }
+
+        .hero-section p {
+            color: #94a3b8;
+            margin-bottom: 14px;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid currentColor;
+        }
+
+        .badge.red { color: #f87171; background-color: rgba(239, 68, 68, 0.15); }
+        .badge.yellow { color: #facc15; background-color: rgba(234, 179, 8, 0.15); }
+        .badge.green { color: #34d399; background-color: rgba(16, 185, 129, 0.15); }
+
+        .stage-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #34d399;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .counter-badge {
+            background-color: rgba(234, 179, 8, 0.15);
+            color: #facc15;
+            padding: 4px 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .stage-container {
+            width: 100%;
+            height: 280px;
+            background: var(--sky-gradient);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #334155;
+            cursor: pointer;
+        }
+
+        .moon {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            width: 55px;
+            height: 55px;
+            background: #fef08a;
+            border-radius: 50%;
+            box-shadow: 0 0 25px #fde047;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .moon.pulsing {
+            transform: scale(1.3);
+            box-shadow: 0 0 45px #facc15;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+        }
+        .cloud-1 { width: 100px; height: 30px; top: 40px; left: 10%; animation: floatCloud 25s linear infinite; }
+        .cloud-2 { width: 140px; height: 40px; top: 20px; left: 60%; animation: floatCloud 35s linear infinite; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(900px); }
+        }
+
+        .scenery-tree {
+            position: absolute;
+            bottom: 50px;
+            left: 30px;
+            width: 120px;
+            height: 130px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M46 90 L54 90 L52 40 L48 40 Z" fill="%231e293b"/><circle cx="50" cy="35" r="30" fill="%23064e3b"/><circle cx="35" cy="45" r="22" fill="%23022c22"/><circle cx="65" cy="45" r="22" fill="%23022c22"/></svg>');
+            background-repeat: no-repeat;
+        }
+
+        .scenery-rocks {
+            position: absolute;
+            bottom: 45px;
+            right: 30px;
+            width: 90px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50"><ellipse cx="30" cy="35" rx="25" ry="15" fill="%23334155"/><ellipse cx="70" cy="38" rx="20" ry="12" fill="%231e293b"/><ellipse cx="48" cy="30" rx="18" ry="14" fill="%23475569"/></svg>');
+            background-repeat: no-repeat;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 55px;
+            background: linear-gradient(to bottom, #064e3b, #022c22);
+            border-top: 4px solid #021a14;
+        }
+
+        .meat-item {
+            position: absolute;
+            bottom: 50px;
+            font-size: 2rem;
+            display: none;
+            z-index: 5;
+            transition: left 0.3s ease;
+        }
+
+        /* Black Panther 3D SVG Animation */
+        .panther-wrapper {
+            position: absolute;
+            bottom: 35px;
+            left: 50px;
+            z-index: 10;
+            transition: transform 0.2s ease;
+            filter: drop-shadow(2px 6px 8px rgba(0,0,0,0.6));
+        }
+
+        .panther-wrapper.walking {
+            animation: walkCycle 1.2s infinite ease-in-out;
+        }
+
+        @keyframes walkCycle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .walking .leg-front-left { animation: legSwingA 0.6s infinite alternate ease-in-out; transform-origin: 105px 135px; }
+        .walking .leg-back-right { animation: legSwingA 0.6s infinite alternate ease-in-out; transform-origin: 205px 130px; }
+        .walking .leg-front-right { animation: legSwingB 0.6s infinite alternate ease-in-out; transform-origin: 225px 135px; }
+        .walking .leg-back-left { animation: legSwingB 0.6s infinite alternate ease-in-out; transform-origin: 85px 130px; }
+        .walking .panther-tail { animation: tailWag 0.8s infinite alternate ease-in-out; transform-origin: 60px 120px; }
+
+        @keyframes legSwingA {
+            0% { transform: rotate(-18deg); }
+            100% { transform: rotate(18deg); }
+        }
+
+        @keyframes legSwingB {
+            0% { transform: rotate(18deg); }
+            100% { transform: rotate(-18deg); }
+        }
+
+        @keyframes tailWag {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(15deg); }
+        }
+
+        .panther-wrapper.roaring #panther-head {
+            animation: headRoar 0.4s infinite alternate;
+            transform-origin: 240px 88px;
+        }
+
+        @keyframes headRoar {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(-5deg); }
+        }
+
+        .instruction-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 10px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 650px) {
+            .grid-2col { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 14px;
+            color: #34d399;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 6px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-roar { background-color: #ea580c; color: #fff; }
+        .btn-roar:hover { background-color: #c2410c; }
+
+        .btn-growl { background-color: #065f46; color: #fff; }
+        .btn-growl:hover { background-color: #047857; }
+
+        .btn-feed { background-color: #eab308; color: #422006; }
+        .btn-feed:hover { background-color: #ca8a04; color: #fff; }
+
+        .btn-toggle { background-color: #1e293b; border: 2px solid #065f46; color: #34d399; }
+        .btn-toggle:hover { background-color: #334155; }
+
+        .setting-item {
+            margin-bottom: 14px;
+        }
+
+        .setting-item label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+        }
+
+        .setting-item input[type="range"] {
+            width: 100%;
+            accent-color: #065f46;
+        }
+
+        .activity-log {
+            list-style: none;
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .activity-log li {
+            padding: 6px 10px;
+            border-bottom: 1px solid #334155;
+            color: #cbd5e1;
+        }
+
+        .activity-log li.empty-log {
+            color: #64748b;
+            font-style: italic;
+            border-bottom: none;
+        }
+
+        .char-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .char-card li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .char-card li::before {
+            content: "►";
+            position: absolute;
+            left: 0;
+            color: #f97316;
+            font-size: 0.75rem;
+            top: 2px;
+        }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: var(--border-color);
+            margin: 16px 0;
+        }
+
+        .tech-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tech-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .tech-num {
+            background-color: #065f46;
+            color: #fff;
+            font-weight: bold;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tech-card h4 {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            margin-bottom: 2px;
+        }
+
+        .tech-card p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .main-footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <span class="icon">🐆</span>
+            <div>
+                <h1>Rimba Interaktif</h1>
+                <p>Proyek Multimedia: Gambar 3D - Suara - Gerak</p>
+            </div>
+        </div>
+        <div class="identity">
+            <p><strong>M Bona Riski (Boris)</strong></p>
+            <p>NIM: 242502040040 - Kelas 3TI01</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2>Si Bayangan Malam, Seekor Macan Kumbang 3D yang Misterius</h2>
+            <p>
+                Ini adalah macan kumbang jantan perkasa dengan bulu hitam legam (melanisme) dan efek visual malam hari 3D. Dia berjalan mengintai di kegelapan hutan rimba, bisa disuruh mengaum, mendengus, dan menyantap daging segar. Gambar dirancang dari kode SVG 3D, sedangkan suaranya menggunakan Web Audio API.
+            </p>
+            <div class="badge-group">
+                <span class="badge red">Grafis 3D SVG</span>
+                <span class="badge yellow">Web Audio Synth</span>
+                <span class="badge green">CSS + JS Gerak</span>
+            </div>
+        </section>
+
+        <!-- Interactive Stage -->
+        <section class="stage-section">
+            <div class="status-bar">
+                <span class="status-indicator"></span>
+                <span id="status-text">Status: Mengintai diam-diam di kegelapan rimba</span>
+                <div class="counter-badge">
+                    🍖 Daging termakan: <span id="meat-count">0</span>
+                </div>
+            </div>
+
+            <!-- Stage Canvas -->
+            <div class="stage-container" id="stage">
+                <div class="moon" id="moon"></div>
+                <div class="cloud cloud-1"></div>
+                <div class="cloud cloud-2"></div>
+
+                <div class="scenery-tree"></div>
+                <div class="scenery-rocks"></div>
+                <div class="meat-item" id="meat">🍖</div>
+
+                <!-- 3D Black Panther Character SVG -->
+                <div class="panther-wrapper walking" id="panther">
+                    <svg class="panther-svg" viewBox="0 0 340 220" width="230" height="150">
+                        <!-- Tail -->
+                        <g class="panther-tail">
+                            <path d="M 60 120 C 30 110, 15 70, 5 95" stroke="url(#pantherBody)" stroke-width="10" fill="none" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Back Legs -->
+                        <g class="panther-leg leg-back-left">
+                            <path d="M 85 130 L 75 185 L 92 185" stroke="#111827" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+                        <g class="panther-leg leg-back-right">
+                            <path d="M 205 130 L 195 185 L 212 185" stroke="#030712" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+
+                        <!-- 3D Body Gradient (Dark sleek coat with subtle rosette hint) -->
+                        <ellipse cx="150" cy="125" rx="78" ry="46" fill="url(#pantherBody)" />
+                        
+                        <!-- Front Legs -->
+                        <g class="panther-leg leg-front-left">
+                            <path d="M 105 135 L 100 190 L 117 190" stroke="#1f2937" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+                        <g class="panther-leg leg-front-right">
+                            <path d="M 225 135 L 220 190 L 237 190" stroke="#111827" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </g>
+
+                        <!-- Head Group 3D with Glowing Eyes -->
+                        <g class="panther-head-group" id="panther-head">
+                            <ellipse cx="240" cy="88" rx="30" ry="26" fill="url(#pantherHead)" />
+                            
+                            <!-- Ears -->
+                            <polygon points="215,62 225,45 235,60" fill="#0f172a" />
+                            <polygon points="245,58 253,42 263,56" fill="#0f172a" />
+
+                            <!-- Glowing Emerald/Amber Eyes (Signature Panther Look) -->
+                            <ellipse cx="245" cy="78" rx="4.5" ry="3.5" fill="#facc15" />
+                            <circle cx="245.5" cy="78" r="1.8" fill="#000" />
+
+                            <!-- Nose & Snout -->
+                            <polygon points="263,90 273,90 268,97" fill="#030712" />
+                            <path id="panther-jaw" d="M 260 98 Q 268 104 274 98" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Gradients for 3D Shading -->
+                        <defs>
+                            <linearGradient id="pantherBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#374151" />
+                                <stop offset="50%" stop-color="#1f2937" />
+                                <stop offset="100%" stop-color="#030712" />
+                            </linearGradient>
+                            <linearGradient id="pantherHead" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#4b5563" />
+                                <stop offset="100%" stop-color="#111827" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="ground"></div>
+            </div>
+            <p class="instruction-note">Klik macan kumbang untuk mengaum, atau tekan <code>Spasi</code>.</p>
+        </section>
+
+        <!-- Controls Section -->
+        <div class="grid-2col">
+            <section class="card">
+                <h3>⚙️ Panel Aksi</h3>
+                <div class="button-group">
+                    <button class="btn btn-roar" id="btn-roar">🐆 Suruh Mengaum</button>
+                    <button class="btn btn-growl" id="btn-growl">🐈‍⬛ Suruh Mendengus</button>
+                    <button class="btn btn-feed" id="btn-feed">🍖 Kasih Daging (Makan)</button>
+                    <button class="btn btn-toggle" id="btn-toggle">⏸️ Berhenti Mengintai</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>🛠️ Pengaturan</h3>
+                <div class="setting-item">
+                    <label for="speed-slider">🏃 Kecepatan jalan: <span id="speed-val">1.0x</span></label>
+                    <input type="range" id="speed-slider" min="0.2" max="2.0" step="0.1" value="1.0">
+                </div>
+                <div class="setting-item">
+                    <label for="volume-slider">🔊 Volume suara: <span id="volume-val">90%</span></label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="90">
+                </div>
+            </section>
+        </div>
+
+        <!-- Activity Log -->
+        <section class="card">
+            <h3>📋 Catatan Aktivitas</h3>
+            <ul class="activity-log" id="activity-log">
+                <li class="empty-log">Belum ada aktivitas. Coba klik sang Bayangan Malam.</li>
+            </ul>
+        </section>
+
+        <!-- Characteristics & Technical Info -->
+        <section class="card char-card">
+            <h3>🔍 Kenali Si Bayangan Malam & Arsitektur Sistem</h3>
+            
+            <div style="margin-bottom: 16px;">
+                <h4 style="color: var(--accent-orange); margin-bottom: 8px;">Karakteristik Macan Kumbang (Panthera pardus melas)</h4>
+                <ul>
+                    <li><strong>Gen Melanisme:</strong> Warna hitam legam pada macan kumbang disebabkan oleh mutasi genetik yang menghasilkan pigmen melanin berlebih. Pola totol (*rosettes*) aslinya tetap ada dan terlihat samar di bawah pantulan cahaya.</li>
+                    <li><strong>Pemburu Nokturnal:</strong> Sangat aktif di malam hari dengan penglihatan tajam serta mata yang memantulkan cahaya di dalam gelap.</li>
+                    <li><strong>Pemanjat Ulung:</strong> Memiliki kekuatan cakar luar biasa untuk membawa mangsanya naik ke atas pohon tinggi.</li>
+                </ul>
+            </div>
+
+            <hr class="divider">
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <span class="tech-num">1</span>
+                    <div>
+                        <h4>Vektor 3D SVG dari Kode</h4>
+                        <p>Karakter macan kumbang dirancang murni menggunakan kode SVG dengan gradasi warna gelap malam dan mata menyala terang.</p>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <span class="tech-num">2</span>
+                    <div>
+                        <h4>Web Audio Synthesizer</h4>
+                        <p>Mensintesiskan suara auman frekuensi rendah khas macan malam secara real-time tanpa file audio eksternal.</p>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <span class="tech-num">3</span>
+                    <div>
+                        <h4>Animasi Walk-Cycle CSS & JS</h4>
+                        <p>Mengatur pergerakan langkah kaki, ekor, dan interaksi pakan daging secara dinamis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Rimba Interaktif - Proyek Web Multimedia Interaktif</p>
+    </footer>
+
+    <script>
+        let isWalking = true;
+        let isBusy = false;
+        let meatEatenCount = 0;
+        let pantherPositionX = 50; 
+        let walkSpeed = 1.0;
+        let masterVolume = 0.9;
+        let walkInterval = null;
+
+        const pantherWrapper = document.getElementById('panther');
+        const stage = document.getElementById('stage');
+        const statusText = document.getElementById('status-text');
+        const meatCountEl = document.getElementById('meat-count');
+        const meatEl = document.getElementById('meat');
+        const moonEl = document.getElementById('moon');
+        const activityLog = document.getElementById('activity-log');
+
+        const btnRoar = document.getElementById('btn-roar');
+        const btnGrowl = document.getElementById('btn-growl');
+        const btnFeed = document.getElementById('btn-feed');
+        const btnToggle = document.getElementById('btn-toggle');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeVal = document.getElementById('volume-val');
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playRoarSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const bufferSize = audioCtx.sampleRate * 1.5;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = buffer;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(140, now);
+            filter.frequency.exponentialRampToValueAtTime(380, now + 0.3);
+            filter.frequency.exponentialRampToValueAtTime(100, now + 1.4);
+
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0.01, now);
+            gainNode.gain.linearRampToValueAtTime(masterVolume, now + 0.2);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+
+            whiteNoise.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            whiteNoise.start(now);
+            whiteNoise.stop(now + 1.5);
+        }
+
+        function playGrowlSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(60, now);
+            osc.frequency.linearRampToValueAtTime(40, now + 0.8);
+
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(masterVolume * 0.7, now + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.9);
+        }
+
+        function logActivity(text) {
+            const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const emptyLog = activityLog.querySelector('.empty-log');
+            if (emptyLog) emptyLog.remove();
+
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>[${time}]</strong> ${text}`;
+            activityLog.insertBefore(li, activityLog.firstChild);
+        }
+
+        function triggerRoar() {
+            if (isBusy) return;
+            isBusy = true;
+
+            playRoarSound();
+            pantherWrapper.classList.add('roaring');
+            moonEl.classList.add('pulsing');
+            statusText.textContent = 'Status: Mengaum di bawah bulan purnama';
+
+            logActivity('🐆 Macan kumbang mengaum menggelegar di malam hari!');
+
+            setTimeout(() => {
+                pantherWrapper.classList.remove('roaring');
+                moonEl.classList.remove('pulsing');
+                isBusy = false;
+                if (isWalking) {
+                    statusText.textContent = 'Status: Mengintai diam-diam di kegelapan rimba';
+                } else {
+                    statusText.textContent = 'Status: Siaga bersembunyi';
+                }
+            }, 1500);
+        }
+
+        function triggerGrowl() {
+            if (isBusy) return;
+            isBusy = true;
+
+            playGrowlSound();
+            statusText.textContent = 'Status: Mendengus dalam kegelapan...';
+            logActivity('🐈‍⬛ Macan kumbang mendengus waspada.');
+
+            setTimeout(() => {
+                isBusy = false;
+                if (isWalking) {
+                    statusText.textContent = 'Status: Mengintai diam-diam di kegelapan rimba';
+                } else {
+                    statusText.textContent = 'Status: Siaga bersembunyi';
+                }
+            }, 1000);
+        }
+
+        function triggerFeed() {
+            if (isBusy) return;
+            isBusy = true;
+
+            const meatPos = (pantherPositionX + 25) % 80 + 10;
+            meatEl.style.left = meatPos + '%';
+            meatEl.style.display = 'block';
+
+            statusText.textContent = 'Status: Menyambar daging buruan...';
+            logActivity('🍖 Daging buruan diletakkan dalam gelap.');
+
+            const duration = 1500;
+            pantherWrapper.style.transition = `left ${duration}ms linear`;
+            pantherWrapper.style.left = (meatPos - 10) + '%';
+            pantherPositionX = meatPos - 10;
+
+            setTimeout(() => {
+                meatEl.style.display = 'none';
+                meatEatenCount++;
+                meatCountEl.textContent = meatEatenCount;
+                statusText.textContent = 'Status: Melahap buruan dengan cepat!';
+                logActivity(`😋 Macan kumbang menyantap daging buruan. (Total: ${meatEatenCount})`);
+
+                setTimeout(() => {
+                    pantherWrapper.style.transition = 'none';
+                    isBusy = false;
+                    if (isWalking) {
+                        statusText.textContent = 'Status: Mengintai diam-diam di kegelapan rimba';
+                    } else {
+                        statusText.textContent = 'Status: Kenyang beristirahat';
+                    }
+                }, 1200);
+            }, duration);
+        }
+
+        function startWalkingLoop() {
+            if (walkInterval) clearInterval(walkInterval);
+
+            walkInterval = setInterval(() => {
+                if (!isWalking || isBusy) return;
+
+                pantherPositionX += 0.4 * walkSpeed;
+                if (pantherPositionX > 80) {
+                    pantherPositionX = 5; 
+                }
+
+                pantherWrapper.style.left = pantherPositionX + '%';
+            }, 50);
+        }
+
+        function toggleWalk() {
+            isWalking = !isWalking;
+            if (isWalking) {
+                pantherWrapper.classList.add('walking');
+                btnToggle.textContent = '⏸️ Berhenti Mengintai';
+                statusText.textContent = 'Status: Mengintai diam-diam di kegelapan rimba';
+                logActivity('🐾 Macan kumbang kembali mengintai.');
+            } else {
+                pantherWrapper.classList.remove('walking');
+                btnToggle.textContent = '▶️ Mulai Mengintai';
+                statusText.textContent = 'Status: Bersembunyi diam';
+                logActivity('🛑 Macan kumbang berhenti bergerak.');
+            }
+        }
+
+        stage.addEventListener('click', triggerRoar);
+        btnRoar.addEventListener('click', triggerRoar);
+        btnGrowl.addEventListener('click', triggerGrowl);
+        btnFeed.addEventListener('click', triggerFeed);
+        btnToggle.addEventListener('click', toggleWalk);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                triggerRoar();
+            }
+        });
+
+        speedSlider.addEventListener('input', (e) => {
+            walkSpeed = parseFloat(e.target.value);
+            speedVal.textContent = walkSpeed.toFixed(1) + 'x';
+            pantherWrapper.style.animationDuration = (1.2 / walkSpeed) + 's';
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            masterVolume = parseInt(e.target.value) / 100;
+            volumeVal.textContent = e.target.value + '%';
+        });
+
+        startWalkingLoop();
+    </script>
+</body>
+</html>
